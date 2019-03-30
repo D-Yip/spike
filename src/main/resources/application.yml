@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: spike
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/spike?useUnicode=true&characterEncoding=utf8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 694975
+    type: com.alibaba.druid.pool.DruidDataSource
+    tomcat:
+      max-active: 20
+      initial-size: 10
+      max-wait: 10000
+      min-idle: 1
+      time-between-eviction-runs-millis: 10000
+      min-evictable-idle-time-millis: 30000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+    dbcp2:
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+
+#mybatis
+mybatis:
+  type-aliases-package: com.ysj.spike.domain
+  configuration:
+    map-underscore-to-camel-case: true  #下划线转驼峰
+    default-fetch-size: 100 #
+    default-statement-timeout: 3000
+  mapper-locations: classpath:com/ysj/spike/dao/*.xml

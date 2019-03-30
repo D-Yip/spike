@@ -21,6 +21,16 @@ spring:
     dbcp2:
       pool-prepared-statements: true
       max-open-prepared-statements: 20
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3
+    password: 123456
+    jedis:
+      pool:
+        max-active: 10
+        max-idle: 10
+        max-wait: 3
 
 #mybatis
 mybatis:

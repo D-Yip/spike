@@ -1,10 +1,11 @@
 package com.ysj.spike.service;
 
 import com.ysj.spike.domain.User;
+import com.ysj.spike.vo.LoginVO;
 
 public interface UserService {
 
-    User getById(int id);
+    User getById(Long id);
 
-    boolean tx();
+    boolean login(LoginVO loginVO);
 }

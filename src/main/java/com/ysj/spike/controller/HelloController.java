@@ -4,6 +4,7 @@ import com.ysj.spike.base.CodeMsg;
 import com.ysj.spike.base.Result;
 import com.ysj.spike.domain.User;
 import com.ysj.spike.redis.RedisService;
+import com.ysj.spike.redis.impl.UserKey;
 import com.ysj.spike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class HelloController {
 
     @RequestMapping(value = "/redis/get")
     public Result<User> redisGet() {
-        User v1 = redisService.get("key2",User.class);
+        User v1 = redisService.get(UserKey.getById,"1",User.class);
         return Result.success(v1);
     }
 
@@ -52,7 +53,7 @@ public class HelloController {
         User user = new User();
         user.setId(22);
         user.setName("Jack");
-        boolean v1 = redisService.set("key2",user);
+        boolean v1 = redisService.set(UserKey.getById,"1",user);
         return Result.success(v1);
     }
 }

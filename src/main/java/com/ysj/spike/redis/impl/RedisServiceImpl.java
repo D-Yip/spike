@@ -1,11 +1,13 @@
 package com.ysj.spike.redis.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ysj.spike.redis.KeyPrefix;
 import com.ysj.spike.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
 
 @Service
 public class RedisServiceImpl implements RedisService {
@@ -14,11 +16,13 @@ public class RedisServiceImpl implements RedisService {
     private JedisPool jedisPool;
 
     @Override
-    public <T> T get(String key, Class<T> clazz) {
+    public <T> T get(KeyPrefix keyPrefix, String key, Class<T> clazz) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            String str = jedis.get(key);
+            // 生成真正的key
+            String realKey = keyPrefix.getPrefix() + key;
+            String str = jedis.get(realKey);
             T t = stringToBean(str,clazz);
             return t;
         } finally {
@@ -27,7 +31,7 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public <T> boolean set(String key, T value) {
+    public <T> boolean set(KeyPrefix keyPrefix, String key, T value) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
@@ -35,10 +39,55 @@ public class RedisServiceImpl implements RedisService {
             if (str == null || str.length() <= 0) {
                 return false;
             }
-            jedis.set(key,str);
+            String realKey = keyPrefix.getPrefix() + key;
+            int seconds = keyPrefix.expireSeconds();
+            if (seconds <= 0) {
+                jedis.set(realKey,str);
+            } else {
+                jedis.setex(realKey,seconds, str);
+            }
             return true;
         } finally {
             returnToPool(jedis);
+        }
+    }
+
+    @Override
+    public <T> boolean exists(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.exists(realKey);
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
+    public <T> Long incr(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.incr(realKey);
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
+    public <T> Long decr(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.decr(realKey);
+        } finally {
+            jedis.close();
         }
     }
 

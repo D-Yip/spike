@@ -4,17 +4,29 @@ import com.ysj.spike.base.CodeMsg;
 import com.ysj.spike.dao.UserDao;
 import com.ysj.spike.domain.User;
 import com.ysj.spike.exception.GlobalException;
+import com.ysj.spike.redis.RedisService;
+import com.ysj.spike.redis.impl.UserKey;
 import com.ysj.spike.service.UserService;
 import com.ysj.spike.utils.MD5Util;
+import com.ysj.spike.utils.UUIDUtil;
 import com.ysj.spike.vo.LoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String COOKIE_NAME_TOKEN = "token";
+
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public User getById(Long id) {
@@ -23,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(LoginVO loginVO) {
+    public boolean login(HttpServletResponse response, LoginVO loginVO) {
         if (loginVO == null) {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
@@ -41,6 +53,14 @@ public class UserServiceImpl implements UserService {
         if (!calcPass.equals(dbPass)) {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
+
+        // 生成token
+        String token = UUIDUtil.uuid();
+        redisService.set(UserKey.token,token,user);
+        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN,token);
+        cookie.setMaxAge(UserKey.token.expireSeconds());
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return true;
     }
 }

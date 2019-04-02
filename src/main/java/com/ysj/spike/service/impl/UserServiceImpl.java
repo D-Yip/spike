@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -53,14 +54,30 @@ public class UserServiceImpl implements UserService {
         if (!calcPass.equals(dbPass)) {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
-
-        // 生成token
         String token = UUIDUtil.uuid();
+        // 生成token
+        addCookie(response,token, user);
+        return true;
+    }
+
+    @Override
+    public User getByToken(HttpServletResponse response, String token) {
+        if (token.isEmpty()) {
+            return null;
+        }
+        User user = redisService.get(UserKey.token, token, User.class);
+        if (user != null) {
+            addCookie(response, token,user);
+        }
+        return user;
+    }
+
+    private void addCookie(HttpServletResponse response, String token, User user) {
+        // 生成token
         redisService.set(UserKey.token,token,user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN,token);
         cookie.setMaxAge(UserKey.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
-        return true;
     }
 }

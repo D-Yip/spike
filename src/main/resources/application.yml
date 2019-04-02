@@ -2,7 +2,7 @@ spring:
   application:
     name: spike
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/spike?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.92.103:3306/spike?useUnicode=true&characterEncoding=utf8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 694975
@@ -22,7 +22,7 @@ spring:
       pool-prepared-statements: true
       max-open-prepared-statements: 20
   redis:
-    host: 127.0.0.1
+    host: 192.168.92.102
     port: 6379
     timeout: 3
     password: 123456

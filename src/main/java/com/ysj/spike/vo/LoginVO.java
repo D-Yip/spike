@@ -12,7 +12,6 @@ public class LoginVO {
     private String username;
 
     @NotNull
-    @Length(min = 32)
     private String password;
 
     public String getUsername() {

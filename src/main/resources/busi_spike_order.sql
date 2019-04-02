@@ -1,4 +1,4 @@
-create table `spike_order`(
+create table `busi_spike_order`(
   `id` bigint(20) not null auto_increment,
   `user_id` bigint(20) default null comment '用户ID',
   `order_id` bigint(20) default null comment '订单ID',

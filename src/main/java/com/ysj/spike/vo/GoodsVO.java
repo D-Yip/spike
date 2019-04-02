@@ -1,12 +1,10 @@
-package com.ysj.spike.domain;
+package com.ysj.spike.vo;
+
+import com.ysj.spike.domain.Goods;
 
 import java.util.Date;
 
-public class SpikeGoods {
-
-    private Long id;
-
-    private Long goodsId;
+public class GoodsVO extends Goods {
 
     private Double spikePrice;
 
@@ -16,20 +14,12 @@ public class SpikeGoods {
 
     private Date endDate;
 
-    public Long getId() {
-        return id;
+    public Double getSpikePrice() {
+        return spikePrice;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
+    public void setSpikePrice(Double spikePrice) {
+        this.spikePrice = spikePrice;
     }
 
     public Integer getStockCount() {
@@ -54,13 +44,5 @@ public class SpikeGoods {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public Double getSpikePrice() {
-        return spikePrice;
-    }
-
-    public void setSpikePrice(Double spikePrice) {
-        this.spikePrice = spikePrice;
     }
 }

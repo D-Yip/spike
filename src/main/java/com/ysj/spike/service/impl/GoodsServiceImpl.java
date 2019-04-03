@@ -26,9 +26,10 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public int reduceStock(GoodsVO goodsVO) {
+    public boolean reduceStock(GoodsVO goodsVO) {
         SpikeGoods goods = new SpikeGoods();
         goods.setGoodsId(goodsVO.getId());
-        return goodsDao.reduceStock(goods);
+        int ret = goodsDao.reduceStock(goods);
+        return ret > 0;
     }
 }

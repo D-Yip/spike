@@ -42,10 +42,10 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(userId);
-        long orderId = orderDao.insert(orderInfo);
+        orderDao.insert(orderInfo);
         SpikeOrder spikeOrder = new SpikeOrder();
         spikeOrder.setGoodsId(goodsVO.getId());
-        spikeOrder.setOrderId(orderId);
+        spikeOrder.setOrderId(orderInfo.getId());
         spikeOrder.setUserId(userId);
         orderDao.insertSpikeOrder(spikeOrder);
         redisService.set(OrderKey.getSpikeOrderByUidGid,""+userId+""+goodsVO.getId(),spikeOrder);

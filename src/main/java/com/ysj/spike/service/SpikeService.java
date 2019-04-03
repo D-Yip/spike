@@ -5,4 +5,6 @@ import com.ysj.spike.vo.GoodsVO;
 
 public interface SpikeService {
     OrderInfo spike(long userId, GoodsVO goodsVO);
+
+    long getSpikeResult(Long id, long goodsId);
 }

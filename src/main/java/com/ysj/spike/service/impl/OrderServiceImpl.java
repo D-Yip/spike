@@ -3,6 +3,8 @@ package com.ysj.spike.service.impl;
 import com.ysj.spike.dao.OrderDao;
 import com.ysj.spike.domain.OrderInfo;
 import com.ysj.spike.domain.SpikeOrder;
+import com.ysj.spike.redis.RedisService;
+import com.ysj.spike.redis.impl.OrderKey;
 import com.ysj.spike.service.OrderService;
 import com.ysj.spike.vo.GoodsVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,14 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDao orderDao;
 
+    @Autowired
+    private RedisService redisService;
+
     @Override
     public SpikeOrder getSpikeOrderByUserIdGoodsId(long userId, long goodsId) {
-        return orderDao.getSpikeOrderByUserIdGoodsId(userId,goodsId);
+//        return orderDao.getSpikeOrderByUserIdGoodsId(userId,goodsId);
+        SpikeOrder spikeOrder = redisService.get(OrderKey.getSpikeOrderByUidGid, "" + userId + "" + goodsId, SpikeOrder.class);
+        return spikeOrder;
     }
 
     @Override
@@ -41,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         spikeOrder.setOrderId(orderId);
         spikeOrder.setUserId(userId);
         orderDao.insertSpikeOrder(spikeOrder);
+        redisService.set(OrderKey.getSpikeOrderByUidGid,""+userId+""+goodsVO.getId(),spikeOrder);
         return orderInfo;
     }
 

@@ -22,7 +22,10 @@ public class SpikeServiceImpl implements SpikeService {
     @Transactional
     public OrderInfo spike(long userId, GoodsVO goodsVO) {
         // 减库存 下订单 写入秒杀订单
-        goodsService.reduceStock(goodsVO);
+        int i = goodsService.reduceStock(goodsVO);
+        if (i == 0) {
+            return null;
+        }
 
         OrderInfo orderInfo = orderService.createOrder(userId,goodsVO);
         return orderInfo;

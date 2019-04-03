@@ -43,6 +43,9 @@ public class SpikeController {
         }
         //减库存 下订单 写入秒杀订单
         OrderInfo orderInfo = spikeService.spike(userId, goodsVO);
+        if (orderInfo == null) {
+            return Result.error(CodeMsg.SPIKE_OVER);
+        }
         return Result.success(orderInfo);
     }
 }

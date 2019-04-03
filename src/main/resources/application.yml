@@ -22,7 +22,7 @@ spring:
       pool-prepared-statements: true
       max-open-prepared-statements: 20
   redis:
-    host: 192.168.92.102
+    host: 192.168.92.104
     port: 6379
     timeout: 3
     password: 123456

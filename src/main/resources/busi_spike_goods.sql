@@ -7,3 +7,6 @@ create table `busi_spike_goods`(
   `end_date` datetime default null comment '秒杀结束时间',
   primary key (`id`)
 )engine =InnoDB auto_increment = 3 default charset = utf8mb4;
+
+insert into busi_spike_goods(goods_id, spike_price, stock_count, start_date, end_date)
+values(1,0.01,10,now(),adddate(now(),interval 10 minute))

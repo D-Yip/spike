@@ -8,4 +8,6 @@ public interface OrderService {
     SpikeOrder getSpikeOrderByUserIdGoodsId(long userId, long goodsId);
 
     OrderInfo createOrder(long userId, GoodsVO goodsVO);
+
+    OrderInfo getOrderById(long orderId);
 }

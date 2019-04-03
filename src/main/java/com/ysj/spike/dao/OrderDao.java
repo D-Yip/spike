@@ -19,4 +19,7 @@ public interface OrderDao {
 
     @Insert("insert into busi_spike_order(user_id,goods_id,order_id) values(#{userId},#{goodsId},#{orderId})")
     void insertSpikeOrder(SpikeOrder spikeOrder);
+
+    @Select("select * from busi_order_info where id = #{orderId}")
+    OrderInfo getOrderById(@Param("orderId") long orderId);
 }

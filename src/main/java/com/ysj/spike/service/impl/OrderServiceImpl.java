@@ -43,4 +43,9 @@ public class OrderServiceImpl implements OrderService {
         orderDao.insertSpikeOrder(spikeOrder);
         return orderInfo;
     }
+
+    @Override
+    public OrderInfo getOrderById(long orderId) {
+        return orderDao.getOrderById(orderId);
+    }
 }

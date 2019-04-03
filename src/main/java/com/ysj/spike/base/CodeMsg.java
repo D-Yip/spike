@@ -22,6 +22,7 @@ public class CodeMsg {
     //商品模块503XX
 
     //订单模块504XX
+    public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(50410,"订单不存在");
 
     //秒杀模块505XX
     public static CodeMsg SPIKE_OVER = new CodeMsg(50510,"商品已经秒杀完毕");

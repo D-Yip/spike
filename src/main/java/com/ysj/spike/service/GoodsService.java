@@ -7,4 +7,8 @@ import java.util.List;
 public interface GoodsService {
 
     List<GoodsVO> listGoodsVO();
+
+    GoodsVO getGoodsVOByGoodsId(long goodsId);
+
+    int reduceStock(GoodsVO goodsVO);
 }

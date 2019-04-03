@@ -24,6 +24,8 @@ public class CodeMsg {
     //订单模块504XX
 
     //秒杀模块505XX
+    public static CodeMsg SPIKE_OVER = new CodeMsg(50510,"商品已经秒杀完毕");
+    public static CodeMsg SPIKE_REPEATE = new CodeMsg(50520,"不能重复秒杀");
 
     private CodeMsg(int code, String msg) {
         this.code = code;

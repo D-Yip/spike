@@ -1,6 +1,7 @@
 package com.ysj.spike.service.impl;
 
 import com.ysj.spike.dao.GoodsDao;
+import com.ysj.spike.domain.SpikeGoods;
 import com.ysj.spike.service.GoodsService;
 import com.ysj.spike.vo.GoodsVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +18,17 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public List<GoodsVO> listGoodsVO() {
         return goodsDao.listGoodsVO();
+    }
+
+    @Override
+    public GoodsVO getGoodsVOByGoodsId(long goodsId) {
+        return goodsDao.getGoodsVOByGoodsId(goodsId);
+    }
+
+    @Override
+    public int reduceStock(GoodsVO goodsVO) {
+        SpikeGoods goods = new SpikeGoods();
+        goods.setGoodsId(goodsVO.getId());
+        return goodsDao.reduceStock(goods);
     }
 }

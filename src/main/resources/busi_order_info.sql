@@ -7,6 +7,7 @@ create table `busi_order_info`(
   `goods_count` int(11) default '0' comment '商品数量',
   `goods_price` decimal(10,2) default '0.00' comment '商品单价',
   `order_channel` tinyint(4) default '0' comment '订单状态，0新建未支付，1已支付，2已发货，3已收货，4已退款，5已完成',
+  `status` tinyint(4) default '0',
   `create_date` datetime default null comment '订单创建时间',
   `pay_date` datetime default null comment '支付时间',
   primary key (`id`)

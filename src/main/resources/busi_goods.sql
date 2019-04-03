@@ -6,5 +6,5 @@ create table `busi_goods` (
   `goods_detail` longtext comment '商品的详细介绍',
   `goods_price` decimal(10,2) default '0.00' comment '商品单价',
   `goods_stock` int(11) default '0' comment '商品库存，-1表示没有限制',
-  primary key ('id')
+  primary key (`id`)
 )ENGINE = InnoDB auto_increment=3 default charset =utf8mb4;

@@ -50,4 +50,12 @@ public interface RedisService {
      */
     <T> Long decr(KeyPrefix keyPrefix,  String key);
 
+    /**
+     * 删除key
+     * @param keyPrefix
+     * @param key
+     * @return
+     */
+    boolean delete(KeyPrefix keyPrefix, String key);
+
 }

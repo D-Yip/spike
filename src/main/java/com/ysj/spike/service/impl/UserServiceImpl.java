@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -43,16 +42,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(long id, String passwordNew) {
+    public boolean updatePassword(String token, long id, String passwordNew) {
         // 取user
         User user = getById(id);
         if (user == null) {
              throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
         }
+        //更新数据库
         User toBeUpdate = new User();
         toBeUpdate.setId(id);
         toBeUpdate.setPassword(MD5Util.formPassTODBPass(passwordNew,user.getSalt()));
-        return false;
+        userDao.update(toBeUpdate);
+        // 处理缓存
+        redisService.delete(UserKey.getById,""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(UserKey.token,token,user);
+        return true;
     }
 
 

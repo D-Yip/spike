@@ -31,9 +31,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        User user = userDao.getById(id);
+        User user = redisService.get(UserKey.getById,""+id,User.class);
+        if (user != null){
+            return user;
+        }
+        user = userDao.getById(id);
+        if (user != null) {
+            redisService.set(UserKey.getById,""+id,User.class);
+        }
         return user;
     }
+
+    @Override
+    public boolean updatePassword(long id, String passwordNew) {
+        // 取user
+        User user = getById(id);
+        if (user == null) {
+             throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        User toBeUpdate = new User();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassTODBPass(passwordNew,user.getSalt()));
+        return false;
+    }
+
 
     @Override
     public boolean login(HttpServletResponse response, LoginVO loginVO) {

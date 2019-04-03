@@ -40,4 +40,4 @@ mybatis:
     default-statement-timeout: 3000
   mapper-locations: classpath:com/ysj/spike/dao/*.xml
 server:
-  port: 8081
+  port: 8080

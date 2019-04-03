@@ -1,6 +1,5 @@
 package com.ysj.spike.dao;
 
-import com.ysj.spike.domain.Goods;
 import com.ysj.spike.domain.SpikeGoods;
 import com.ysj.spike.vo.GoodsVO;
 import org.apache.ibatis.annotations.Mapper;

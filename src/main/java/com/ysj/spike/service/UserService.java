@@ -9,6 +9,8 @@ public interface UserService {
 
     User getById(Long id);
 
+    boolean updatePassword(long id,String passwordNew);
+
     boolean login(HttpServletResponse response, LoginVO loginVO);
 
     User getByToken(HttpServletResponse response, String token);

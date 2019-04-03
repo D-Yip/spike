@@ -22,11 +22,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/spike")
 public class SpikeController implements InitializingBean {
+
+    private Map<Long,Boolean> localOverMap = new HashMap<>();
 
     @Autowired
     private GoodsService goodsService;
@@ -55,6 +59,7 @@ public class SpikeController implements InitializingBean {
         }
         for (GoodsVO goods : goodsList) {
             redisService.set(GoodsKey.getSpikeGoodsStock,""+goods.getId(),goods.getGoodsStock());
+            localOverMap.put(goods.getId(),false);
         }
 
     }
@@ -62,17 +67,18 @@ public class SpikeController implements InitializingBean {
     @GetMapping("/doSpike")
     public Result doSpike(@RequestParam("goodsId") long goodsId,@RequestParam("userId") long userId) {
 
-        Long stock = redisService.decr(GoodsKey.getSpikeGoodsStock, "" + goodsId);
-        if (stock < 0) {
+        boolean isOver = localOverMap.get(goodsId);
+        if (isOver) {
             return Result.error(CodeMsg.SPIKE_OVER);
         }
 
         // 判断库存
-        GoodsVO goodsVO = goodsService.getGoodsVOByGoodsId(goodsId);
-        Integer stockCount = goodsVO.getStockCount();
-        if (stockCount <= 0) {
+        Long stock = redisService.decr(GoodsKey.getSpikeGoodsStock, "" + goodsId);
+        if (stock < 0) {
+            localOverMap.put(goodsId,true);
             return Result.error(CodeMsg.SPIKE_OVER);
         }
+
         // 判断是否已经秒杀到了
         SpikeOrder spikeOrder = orderService.getSpikeOrderByUserIdGoodsId(userId, goodsId);
         if (spikeOrder != null) {

@@ -5,3 +5,5 @@ create table `busi_spike_order`(
   `goods_id` bigint(20) default null comment '商品ID',
   primary key (`id`)
 )engine = InnoDB auto_increment=3 default charset = utf8mb4;
+
+alter table busi_spike_order add unique u_uid_gid(`user_id`,`goods_id`)

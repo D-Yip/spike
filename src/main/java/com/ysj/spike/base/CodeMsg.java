@@ -10,6 +10,7 @@ public class CodeMsg {
     public static CodeMsg SUCCESS = new CodeMsg(0,"success");
     public static CodeMsg SERVER_ERROR = new CodeMsg(500,"服务端异常");
     public static CodeMsg BIND_ERROR = new CodeMsg(501,"参数检验异常:%s");
+    public static CodeMsg REQUEST_ILLEGAL = new CodeMsg(502,"请求非法");
 
     //登录模块502XX
     public static CodeMsg SESSION_ERROR = new CodeMsg(50210,"session不存在或者已经失效");

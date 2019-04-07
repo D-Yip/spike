@@ -7,6 +7,8 @@ import com.ysj.spike.redis.impl.SpikeKey;
 import com.ysj.spike.service.GoodsService;
 import com.ysj.spike.service.OrderService;
 import com.ysj.spike.service.SpikeService;
+import com.ysj.spike.utils.MD5Util;
+import com.ysj.spike.utils.UUIDUtil;
 import com.ysj.spike.vo.GoodsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,19 @@ public class SpikeServiceImpl implements SpikeService {
                 return 0;
             }
         }
+    }
+
+    @Override
+    public boolean checkPath(long userId, long goodsId, String path) {
+        String pathOld = redisService.get(SpikeKey.getSpikePath, "" + userId + "_" + goodsId, String.class);
+        return path.equals(pathOld);
+    }
+
+    @Override
+    public String createSpikePath(long userId, long goodsId) {
+        String str = MD5Util.md5(UUIDUtil.uuid()+"123456");
+        redisService.set(SpikeKey.getSpikePath, ""+userId+"_"+goodsId,str);
+        return str;
     }
 
     private void setGoodsOver(Long goodsId) {

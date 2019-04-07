@@ -10,17 +10,17 @@ import com.ysj.spike.rabbitmq.message.SpikeMessage;
 import com.ysj.spike.rabbitmq.sender.SpikeSender;
 import com.ysj.spike.redis.RedisService;
 import com.ysj.spike.redis.impl.GoodsKey;
+import com.ysj.spike.redis.impl.SpikeKey;
 import com.ysj.spike.service.GoodsService;
 import com.ysj.spike.service.OrderService;
 import com.ysj.spike.service.SpikeService;
+import com.ysj.spike.utils.MD5Util;
+import com.ysj.spike.utils.UUIDUtil;
 import com.ysj.spike.vo.GoodsVO;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,9 +64,30 @@ public class SpikeController implements InitializingBean {
 
     }
 
-    @GetMapping("/doSpike")
-    public Result doSpike(@RequestParam("goodsId") long goodsId,@RequestParam("userId") long userId) {
+    @GetMapping(value = "/getSpikePath")
+    public Result getSpikePath(@RequestParam("goodsId") long goodsId,@RequestParam("userId") long userId){
 
+        String path = spikeService.createSpikePath(userId,goodsId);
+        return Result.success(path);
+    }
+
+    /**
+     * 秒杀
+     * @param goodsId
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/{path}/doSpike")
+    public Result doSpike(@RequestParam("goodsId") long goodsId,
+                          @RequestParam("userId") long userId,
+                          @PathVariable("path") String path) {
+
+        //验证path
+        boolean check = spikeService.checkPath(userId,goodsId,path);
+        if (!check) {
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
+        //　内存标记，减少redis访问
         boolean isOver = localOverMap.get(goodsId);
         if (isOver) {
             return Result.error(CodeMsg.SPIKE_OVER);
